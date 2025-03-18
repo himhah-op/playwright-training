@@ -17,6 +17,8 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("textbox", name="Password").fill("admin123")
     page.get_by_role("button", name="Login").click()
     expect(page.get_by_text("manda user")).to_be_visible()
+
+
     page.get_by_role("link", name="PIM").click()
     page.get_by_role("button", name=" Add").click()
     page.get_by_role("textbox", name="First Name").click()
@@ -27,6 +29,8 @@ def run(playwright: Playwright) -> None:
     page.locator("form").get_by_role("textbox").nth(4).click()
     page.locator("form").get_by_role("textbox").nth(4).fill("987543")
     page.get_by_role("button", name="Save").click()
+
+
     page.locator("form").filter(has_text="Employee Full NameEmployee").locator("i").nth(1).click()
     page.locator("form").filter(has_text="Employee Full NameEmployee").locator("i").nth(2).click()
     page.get_by_role("option", name="Single").click()
