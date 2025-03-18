@@ -2,3 +2,4 @@
 /PlaywrightPython/.pytest_cache
 /PlaywrightPython/__pycache__
 /PlaywrightPython/venv
+__pycache__
