@@ -15,3 +15,14 @@ playwright install
 Run test:
 ===========
 pytest <testname.py>
+
+Debug
+==========
+set PWDEBUG=1
+pytest -s -k test_orangehrm.py
+
+Trace
+========
+set PWDEBUG=0
+pytest --tracing on
+playwright show-trace test-results\tests-test-orangehrm-py-test-search-employee-chromium\trace.zip

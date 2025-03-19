@@ -1,42 +1,29 @@
 import time
-import Data.providers as dp
-from playwright.sync_api import Page, expect, Playwright, sync_playwright
+from playwright.sync_api import Page, expect
+from .base_page import BasePage
+from .providers import Employee
 
-def get_by_label(page, label):
-    element = page.locator(f"xpath=//label[text()='{label}']/../..//input")
-    return (element)
-class LoginPage:
+class AddEmployeePage(BasePage):
     def __init__(self, page):
-        self.page = page
-    def login(self, username, password):
-        page= self.page
-        page.goto("https://opensource-demo.orangehrmlive.com")
-        page.get_by_role("textbox", name="Username").fill(username)
-        page.get_by_role("textbox", name="Password").fill(password)
-        page.get_by_role("button", name="Login").click()
-    def check_pim_menu(self):
+        super().__init__(page)
+    def add_employee(self):
         page = self.page
-        expect(page.locator("a[href*='/pim/viewPimModule']")).to_have_text("PIM")
-
-class AddEmployeePage:
-    def __init__(self, page):
-        self.page = page
-        self.emp = dp.employee()
-        page.goto("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index")
+        self.emp = Employee.fake_employee()
+        page.goto(f"{self.base_url}/web/index.php/dashboard/index")
         page.get_by_role("link", name="PIM").click()
         page.get_by_role("button", name="Add").click()
         page.get_by_role("textbox", name="First Name").fill(self.emp.first_name)
         page.get_by_role("textbox", name="Last Name").fill(self.emp.last_name)
-        get_by_label(page, 'Employee Id').fill(self.emp.id)
+        self.get_by_label('Employee Id').fill(self.emp.id)
         page.get_by_role("button", name="Save").click()
         expect(page.get_by_text(f"{self.emp.first_name} {self.emp.last_name}")).to_be_visible()
 
     def employee_details (self, last_name, first_name):
         page = self.page
         page.get_by_role("link", name="PIM").click()
-        get_by_label(page, 'Employee Name').click()
+        self.get_by_label( 'Employee Name').click()
         time.sleep(0.2)
-        get_by_label(page, 'Employee Name').type(last_name)
+        self.get_by_label( 'Employee Name').type(last_name)
         time.sleep(0.2)
         page.get_by_role("button", name="Search").click()
         page.locator("div.orangehrm-employee-list").locator("div[role='rowgroup']").nth(1).locator(
@@ -50,10 +37,4 @@ class AddEmployeePage:
         date_of_birth.fill(self.emp.birthday)
         page.locator("xpath=//label[text()='Male']").click()
         page.get_by_role("button", name="Save").nth(0).click()
-
-    def logout (self):
-        page= self.page
-        page.locator("p.oxd-userdropdown-name").click()
-        page.get_by_role("menuitem", name="Logout").click()
-        expect (page.get_by_role("textbox", name="Username")).to_be_visible()
 
